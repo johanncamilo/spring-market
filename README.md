@@ -1,5 +1,6 @@
 # Spring Boot
 [captura de apuntes](https://docs.google.com/document/d/1whzY5DwcKjnMf2dsteM3sRMzqClnMa-p1IHvUeYaE94/edit)
+[Drive](https://drive.google.com/drive/u/2/folders/1Clc8eVCVBgdpDvaUh8ScybhTWufs8jzd)
 
 ## ¿Qué es JPA?
 #### Java Persistence Api
@@ -23,6 +24,8 @@ JPA utiliza anotaciones para conectar clases a tablas de la BD y asi evitar hace
 * `@OneToMany` and `@MatyToOne` Representar relaciones
 
 ## Spring Data
+> Es como un **ORM**
+
 Spring Data NO es una implementacion de JPA, sino mas bien es un proyecto que usa JPA para ofrecer funcionalidaes extra en la gestion de tareas desde JAVA a las base de datos.
 
 Spring Data internamente tiene varios subproyectos, entre ellos: Spring Data JPA y Spring Data JDBC, para conectarnos a BD relacionales (SQL). Spring Data MongoDB y Spring Data Cassandra, son proyectos para conectarnos a BD no relacionales.
@@ -43,4 +46,45 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     ...
     }
+```
+
+
+## Pasos Conexion DB - Repositorio
+
+```sql
+-- Repaso postgresql
+
+"id_categoria" SERIAL NOT NULL, ...
+...
+SELECT setval('public.productos_id_producto_seq', 50, true);
+```
+> * el tipo *SERIAL* crea una secuencia en postgres
+> * y esa secuencia se puede reiniciar con otro valor
+
+### 1. build.gradle
+Se busca en [MAVEN REPOSTITORY](https://mvnrepository.com/) el repositorio **postgresql**,
+se copia el group y el name dentro del tag `dependencies` del archivo **build.gradle**
+de nuestro proyecto quedando de la siguiente manera.
+```gradle
+dependencies { 
+    implementation ...
+    runtimeOnly 'org.postgresql:postgresql'
+    ...
+    }
+```
+
+### 2. src/main/resources/application.properties
+Es buena practica declarar el driver de postgresql en este archivo:
+```gradle
+spring.datasource.driverClassName=org.postgresql.Driver
+```
+> esta es la versión moderna de declararlo
+
+### 3. src/main/resources/application-dev.properties
+se añaden las configuraciones de conexión en **application-dev** y **application-prd**: 
+```gradle
+# Database
+spring.datasource.url=jdbc:postgresql://localhost:5432/spring-market
+spring.datasource.username=postgres
+spring.datasource.password=1234
 ```
