@@ -88,3 +88,14 @@ spring.datasource.url=jdbc:postgresql://localhost:5432/spring-market
 spring.datasource.username=postgres
 spring.datasource.password=1234
 ```
+
+### Con MySql
+```gradle
+implementation 'mysql:mysql-connector-java'
+```
+```gradle
+spring.datasource.url=jdbc:mysql://localhost/java?serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.password=
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+```
