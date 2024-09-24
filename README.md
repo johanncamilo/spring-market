@@ -16,10 +16,10 @@ Los frameworks mas populares de Java para este fin son:
 ### Anotaciones JPA
 JPA utiliza anotaciones para conectar clases a tablas de la BD y asi evitar hacerlo de manera nativa con SQL.
 
+* `@Id` Atributo de clave primaria sencilla.
 * `@Entity` Indica a una clase de java que esta representando una tabla de nuestra BD.
 * `@Table`  Recibe el nombre de la tabla a la cual esta mapeando la clase.
 * `@Column`  Se le pone a los atributos de la clase, no es obligatoria, se indica sólo cuando el nombre de la columna es diferente al nombre del atributo de la tabla.
-* `@id` and `@EmbededID` Es el atributo como clave primaria de la tabla dentro de la clase. @id se utiliza cuando es clave primaria sencilla y @EmbededID cuando es una clave primaria compuesta.
 * `@GeneratedValue`  Permite generar automáticamente generar valores para las clases primarias en nuestras clases
 * `@OneToMany` and `@MatyToOne` Representar relaciones
 ```java
@@ -28,6 +28,48 @@ JPA utiliza anotaciones para conectar clases a tablas de la BD y asi evitar hace
 @Column(name = "id_producto")
 private Integer idProducto;
 ```
+### Clave Primaria Compuesta
+Se debe crear una clase aparte que tenga los atributos de la llave compuesta
+* `@Embeddable` Va dentro de la clase que se creó con los atributos de la llave compuesta
+```java
+@Embeddable
+public class ComprasProductoPK implements Serializable {
+    @Column(name = "id_compra")
+    private Integer idCompra;
+
+    @Column(name = "id_producto")
+    private Integer idProducto;
+}
+```
+> Solo los tipos que pueden ser embebidos necesitan implementar explícitamente la interface Serializable. Hibernate (la implementación de JPA que usa Spring Data) requiere que esto sea así cuando se usa luego con @Embeddable.
+> Esto debido que el id (el objeto completo) será usado como llave para indexar los objetos en la sesión y por lo tanto necesita estar serializado para no obtener un error de casteo.
+* `@EmbededID` Clave primaria compuesta. Va dentro de la clase principal que usa a la clase creada
+```java
+@Entity
+@Table(name = "compras_productos")
+public class ComprasProducto {
+    @EmbeddedId
+    private ComprasProductoPK id;
+}
+```
+
+### Interfaz serializable
+Cuando implementas la interface Serializable estás brindándole a un objeto de esa clase la capacidad de ser convertido
+en un flujo de bytes para guardar en disco o ser enviado a través de la red. 
+El proceso de deserialización hace lo contrario. 
+![grafico serialization](https://howtodoinjava.com/wp-content/uploads/Serialization-deserialization-demo.jpg)
+
+
+Dejando esto claro podemos entonces hablar del serialVersionUID. Esta constante se define para que durante la 
+deserialización se verifique que el remitente (quien serializa) y el receptor (quien deserializa) están usando clases 
+compatibles para ese objeto. En caso de que el serialVersionUID no coincida se obtiene el error InvalidClassException.
+
+Más que marcarte un error te marca una advertencia. Puedes compilar tu programa sin errores aun sin usar el 
+serialVersionUID. Sí no se define uno entonces se definirá automáticamente un valor predeterminado en tiempo de 
+ejecución teniendo en cuenta varios factores.
+
+Te dejo este articulo de DZone donde explican varios detalles interesantes del 
+[serialVersionUID](https://dzone.com/articles/what-is-serialversionuid).
 
 ## Perfiles Sring Boot
 * Archivo **resources/application.properties**
