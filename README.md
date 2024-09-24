@@ -23,6 +23,20 @@ JPA utiliza anotaciones para conectar clases a tablas de la BD y asi evitar hace
 * `@GeneratedValue`  Permite generar automáticamente generar valores para las clases primarias en nuestras clases
 * `@OneToMany` and `@MatyToOne` Representar relaciones
 
+## Perfiles Sring Boot
+* Archivo **resources/application.properties**
+* facilita la getión de perfiles, se debe seguir la convención de nomenclatura (-dev, -prd)
+  * application-dev.properties
+  * application-prd.properties
+* Hay que indicar que perfil está activo en el archivo principal
+```gradle
+spring.profiles.active=dev
+spring.application.name=spring-market
+server.servlet.context-path=/belos-market/api
+spring.datasource.driverClassName=org.postgresql.Driver
+```
+> añade variables y atributos para la configuración
+  
 ## Spring Data
 > Es como un **ORM**
 
@@ -37,8 +51,8 @@ Spring data nos provee de respositorios sin codigo, nos permiten hacer todo tipo
 También nos provee de auditorías transparentes, por ello, posee un motor de auditorias que nos permite saber cuadno se insertó un registro, cuando se borró, cuando se actualizo en la BD, etc.
 
 
-#### Implementación Spring Data en el proyecto Market:
-Se busca en [MAVEN REPOSTITORY](https://mvnrepository.com/) el repositorio **Spring Boot Starter Data JPA**,
+### Implementación Spring Data en el proyecto Market:
+Se busca en [MAVEN REPOSTITORY](https://mvnrepository.com/) el repositorio [Spring Boot Starter Data JPA](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa),
 se copia el group y el name dentro del tag `dependencies` del archivo **build.gradle** 
 de nuestro proyecto quedando de la siguiente manera.
 ```gradle
@@ -62,7 +76,7 @@ SELECT setval('public.productos_id_producto_seq', 50, true);
 > * y esa secuencia se puede reiniciar con otro valor
 
 ### 1. build.gradle
-Se busca en [MAVEN REPOSTITORY](https://mvnrepository.com/) el repositorio **postgresql**,
+Se busca en [MAVEN REPOSTITORY](https://mvnrepository.com/) el repositorio [postgresql](https://mvnrepository.com/artifact/org.postgresql/postgresql),
 se copia el group y el name dentro del tag `dependencies` del archivo **build.gradle**
 de nuestro proyecto quedando de la siguiente manera.
 ```gradle
