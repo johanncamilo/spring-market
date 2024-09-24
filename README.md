@@ -2,9 +2,9 @@
 [captura de apuntes](https://docs.google.com/document/d/1whzY5DwcKjnMf2dsteM3sRMzqClnMa-p1IHvUeYaE94/edit)
 [Drive](https://drive.google.com/drive/u/2/folders/1Clc8eVCVBgdpDvaUh8ScybhTWufs8jzd)
 
-## ¿Qué es JPA?
+## JPA
 #### Java Persistence Api
-Jpa es una especificación de Java, standar, para un framework ORM. Quiere decir que son uan serie de reglas que Java define para que cualquier framework que quierea interactura con la BD de Java, tenga que seguir.
+JPA  es una especificación de Java, standar, para un framework ORM. Quiere decir que son uan serie de reglas que Java define para que cualquier framework que quierea interactura con la BD de Java, tenga que seguir.
 
 Los frameworks mas populares de Java para este fin son:
 
@@ -19,9 +19,15 @@ JPA utiliza anotaciones para conectar clases a tablas de la BD y asi evitar hace
 * `@Entity` Indica a una clase de java que esta representando una tabla de nuestra BD.
 * `@Table`  Recibe el nombre de la tabla a la cual esta mapeando la clase.
 * `@Column`  Se le pone a los atributos de la clase, no es obligatoria, se indica sólo cuando el nombre de la columna es diferente al nombre del atributo de la tabla.
-* `@id` amd `@EmbededID` Es el atributo como clave primaria de la tabla dentro de la clase. @id se utiliza cuando es clave primaria sencilla y @EmbededID cuando es una clave primaria compuesta.
+* `@id` and `@EmbededID` Es el atributo como clave primaria de la tabla dentro de la clase. @id se utiliza cuando es clave primaria sencilla y @EmbededID cuando es una clave primaria compuesta.
 * `@GeneratedValue`  Permite generar automáticamente generar valores para las clases primarias en nuestras clases
 * `@OneToMany` and `@MatyToOne` Representar relaciones
+```java
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+@Column(name = "id_producto")
+private Integer idProducto;
+```
 
 ## Perfiles Sring Boot
 * Archivo **resources/application.properties**
@@ -40,7 +46,9 @@ spring.datasource.driverClassName=org.postgresql.Driver
 ## Spring Data
 > Es como un **ORM**
 
-Spring Data NO es una implementacion de JPA, sino mas bien es un proyecto que usa JPA para ofrecer funcionalidaes extra en la gestion de tareas desde JAVA a las base de datos.
+* Spring Data NO es una implementacion de JPA, sino mas bien es un proyecto que usa JPA para ofrecer funcionalidaes extra en la gestion de tareas desde JAVA a las base de datos.
+* Ofrece un nivel de abstracción para no tener que trabajar con la particularidad de cada motor,
+* Evita el código repetitivo tipo CRUD
 
 Spring Data internamente tiene varios subproyectos, entre ellos: Spring Data JPA y Spring Data JDBC, para conectarnos a BD relacionales (SQL). Spring Data MongoDB y Spring Data Cassandra, son proyectos para conectarnos a BD no relacionales.
 
@@ -64,7 +72,7 @@ dependencies {
 
 
 ## Pasos Conexion DB - Repositorio
-
+#### SECUENCIAS
 ```sql
 -- Repaso postgresql
 
