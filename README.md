@@ -221,3 +221,19 @@ spring.datasource.username=root
 spring.datasource.password=
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 ```
+
+## Repositorios de Spring Data
+* Operaciones sobre db sin código
+* Tres tipos de repositorio
+  * CrudRepository: Operaciones CRUD
+  * PagingAndSortingRepository: lo mismo de crud + paginación y ordenamiento
+  * JPARepository: lo mismo de los anteriores + tareas específicas de JPA como Flush -> combina y guarda todo en memoria sin que otros entornos y entidades lo vean
+
+#### Ejemplo implementación CrudRepository<T, ID>
+```java
+public interface ProductoCrudRepository extends CrudRepository<Producto, Integer> {
+}
+```
+> * se crea una interface que extienda de CrudRepository<T, ID>
+> * **CrudResository<T, ID>** espera dos argumentos: La entidad que va a manipular y el tipo de dato de su PK
+> * ProductoCrudRepository ya tiene todos los métodos heredados como **.findAll()**
