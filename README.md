@@ -237,3 +237,28 @@ public interface ProductoCrudRepository extends CrudRepository<Producto, Integer
 > * se crea una interface que extienda de CrudRepository<T, ID>
 > * **CrudResository<T, ID>** espera dos argumentos: La entidad que va a manipular y el tipo de dato de su PK
 > * ProductoCrudRepository ya tiene todos los métodos heredados como **.findAll()**
+
+## Query Methods
+* Consultas sin sql para datos que no puede consultar Repository
+* Generar consultas mediante el nombre de los métodos usando lowerCamelCase
+* Nombrar métodos de una manera particular
+* Pueden retornar tipos de datos Optional<T>
+
+
+#### query directo
+```java
+    @Query(value = "select * from productos where id_categoria = ?", nativeQuery = true)
+    List<Producto> cualquierCosa(int idCategoria);
+```
+
+#### usando QueryMethod es mejor
+```java
+    List<Producto> findByIdCategoria(int idCategoria);
+```
+
+#### Implementación de Optional<T>
+```java
+    public Optional<List<Producto>> getEscasos(int cantidad) {
+        return productoCrudRepository.findByCantidadStockLessThan(cantidad, true);
+    }
+```
