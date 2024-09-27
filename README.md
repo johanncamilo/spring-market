@@ -98,12 +98,13 @@ Te dejo este articulo de DZone donde explican varios detalles interesantes del
 ## Relaciones OneToMany - ManyToOne
 
 ```java
-    @ManyToOne
-    @JoinColumn(name = "id_cliente", insertable = false, updatable = false)
-    private Cliente cliente;
 
-    @OneToMany(mappedBy = "compra")
-    private List<ComprasProducto> productos;
+@ManyToOne
+@JoinColumn(name = "id_cliente", insertable = false, updatable = false)
+private Cliente cliente;
+
+@OneToMany(mappedBy = "compra")
+private List<ComprasProducto> productos;
 
 ```
 
@@ -223,72 +224,147 @@ spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 ```
 
 ## Repositorios de Spring Data
+
 * Operaciones sobre db sin código
 * Tres tipos de repositorio
-  * CrudRepository: Operaciones CRUD
-  * PagingAndSortingRepository: lo mismo de crud + paginación y ordenamiento
-  * JPARepository: lo mismo de los anteriores + tareas específicas de JPA como Flush -> combina y guarda todo en memoria sin que otros entornos y entidades lo vean
+    * CrudRepository: Operaciones CRUD
+    * PagingAndSortingRepository: lo mismo de crud + paginación y ordenamiento
+    * JPARepository: lo mismo de los anteriores + tareas específicas de JPA como Flush -> combina y guarda todo en
+      memoria sin que otros entornos y entidades lo vean
 
 ### Implementación CrudRepository<T, ID> mediante Interfaz
+
 ```java
 public interface ProductoCrudRepository extends CrudRepository<Producto, Integer> {
 }
 ```
+
 > * se crea una interface que extienda de CrudRepository<T, ID>
 > * **CrudResository<T, ID>** espera dos argumentos: La entidad que va a manipular y el tipo de dato de su PK
 > * ProductoCrudRepository ya tiene todos los métodos heredados como **.findAll()**
 
-
 ## Inyección de dependencias
+
 ```java
+
 @Repository
 public class ProductoRepository {
     //    inyección de dependencia ⬇
     private ProductoCrudRepository productoCrudRepository;
 }
 ```
-> si ProdcutCrudRepository se creo como una interfaz ¿Por que nunca se llego a implementar, sino que se trato como una clase? <br> 
+
+> si ProdcutCrudRepository se creo como una interfaz ¿Por que nunca se llego a implementar, sino que se trato como una
+> clase? <br>
 > **Respuesta.**<br>
-> Inyectamos ProductCrudRepository en el Repository **ProductoRepository** y lo usamos directamente porque extiende de CrudRepository, que es una funcionalidad que nos brinda Spring Data para interactuar con la base de datos sin necesidad de implementar. ¡Únicamente tenemos que utilizarla! Genial, no?
+> Inyectamos ProductCrudRepository en el Repository **ProductoRepository** y lo usamos directamente porque extiende de
+> CrudRepository, que es una funcionalidad que nos brinda Spring Data para interactuar con la base de datos sin
+> necesidad
+> de implementar. ¡Únicamente tenemos que utilizarla! Genial, no?
 
 ## Query Methods
+
 * Consultas sin sql para datos que no puede consultar Repository
 * Generar consultas mediante el nombre de los métodos usando lowerCamelCase
 * Nombrar métodos de una manera particular
 * Pueden retornar tipos de datos Optional<T>
 
-
 #### query directo
+
 ```java
-    @Query(value = "select * from productos where id_categoria = ?", nativeQuery = true)
-    List<Producto> cualquierCosa(int idCategoria);
+
+@Query(value = "select * from productos where id_categoria = ?", nativeQuery = true)
+List<Producto> cualquierCosa(int idCategoria);
 ```
 
 #### usando QueryMethod es mejor
+
 ```java
     List<Producto> findByIdCategoria(int idCategoria);
 ```
 
 #### Implementación de Optional<T>
+
 ```java
     public Optional<List<Producto>> getEscasos(int cantidad) {
-        return productoCrudRepository.findByCantidadStockLessThan(cantidad, true);
-    }
+    return productoCrudRepository.findByCantidadStockLessThan(cantidad, true);
+}
 ```
 
-> Los query method son muy potentes. Además de los explicado, permiten realizar múltiples operaciones de comparación con:
+> Los query method son muy potentes. Además de los explicado, permiten realizar múltiples operaciones de comparación
+> con:
 > * Números: mayores, menores, iguales...
 > * Textos: contiene cierta porción de texto, empieza o termina con una porción de texto, ignora case sensitive...
 > * Fechas: Antes de cierta fecha, después de cierta fecha, entre cierta fecha...
-> * Joins entre entidades: Si tenemos una entidad que se relaciona con otra, es posible realizar "joins" con esa relación para tener queries más específicas según nuestra necesidad. Por ejemplo, si tengo una relación de Producto y Categoría y quiero tener todos los productos de cierta categoría podría hacer: findAllByCategoriasId(Integer categoriaId) y así poder llegar a esta relación. Esto puede mezclarse con múltiples relaciones en simultáneo
-> * Comparación entre un conjunto de datos: Si por ejemplo quiero traerme los productos con varias categorías, podría escribir findAllByCategoriasIdIn(List<Integer> categoriaIds); y así trabajar bajo un conjunto de Id de categorías
-
+> * Joins entre entidades: Si tenemos una entidad que se relaciona con otra, es posible realizar "joins" con esa
+    relación para tener queries más específicas según nuestra necesidad. Por ejemplo, si tengo una relación de Producto
+    y Categoría y quiero tener todos los productos de cierta categoría podría hacer: findAllByCategoriasId(Integer
+    categoriaId) y así poder llegar a esta relación. Esto puede mezclarse con múltiples relaciones en simultáneo
+> * Comparación entre un conjunto de datos: Si por ejemplo quiero traerme los productos con varias categorías, podría
+    escribir findAllByCategoriasIdIn(List<Integer> categoriaIds); y así trabajar bajo un conjunto de Id de categorías
 
 ## Anotación @Repository
+
 * `@Repository` Indica que Clase es un componente **específico** encargado de interacutar con la tabla de DB
 * `@Component` Es una anotción de componente más general
 
 ```java
+
 @Repository
-public class ProductoRepository {}
+public class ProductoRepository {
+}
 ```
+
+## Patrón Data Mapper
+
+### Orientar la aplicación en términos de dominio
+* **dominio:** Conjunto de entidades y reglas
+  * llevan a cuestas la lógica del negocio
+* Separar la lógica del negocio de la capa de persistencia y acceso de datos
+  * La capa de lógica no necesita conocer los detalles de la DB (tablas, campos, etc)
+  * Abstrae la DB
+* Poporciona un nivel adicional de Abstracción
+* Consite en convertir/traducir dos objetos que pueden hacer una misma labor
+  * Establece símiles 
+  * Traducir propiedades
+* El proyecto está enfocado en el dominio
+* Desacopla la aplicación de la capa de persistencia
+* Se pueden ocultar campos de forma intencional
+* Define reglas para cualquier repositorio que quiera usar la tabla/entidad de db
+
+### Ventajas
+
+* No exponer la DB directamente a la API, para que ningun agente externo pueda ver el diseño de la DB
+* Desacoplar API a una DB puntual, facilita mudar de un motor a otro: si se desea cambiar a otra DB sólo hay que cambiar
+  el traductor
+* Evitar campos innecesarios en la API
+* Evita mezclar idiomas en el dominio
+
+### mapstruct
+[mapstruct.org](https://mapstruct.org/)
+
+* Generador de código para mapeos
+* [instalación en el proyecto:](https://mapstruct.org/documentation/installation/) buscar la parte de graddle
+
+#### build.gradle
+
+```gradle
+dependencies {
+    ...
+    implementation 'org.mapstruct:mapstruct:1.6.2' 
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.2'
+    ...
+    }
+```
+
+* instalar **MapStruct Support** en el ide
+
+### Pasos implementación DataMapper
+* Crear clases Mapper *Product* y *Category* en el folder *domain*
+* **Pro tip:** guiarse de los entities para crear los atributos
+    * No se llaman exactamente igual los atributos, en este ejemplo están en inglés
+    * Usan tipos primitivos
+    * generar getters & setters
+
+* Crear la interface ProductRepository en /domain/repository/
+  * 'Traducir' los métodos de ProductoRepository en esa interfaz 
