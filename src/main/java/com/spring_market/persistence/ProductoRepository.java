@@ -9,6 +9,7 @@ import java.util.Optional;
 
 @Repository
 public class ProductoRepository {
+    //    inyección de dependencia ⬇
     private ProductoCrudRepository productoCrudRepository;
 
     public List<Producto> getAll() {
@@ -23,7 +24,7 @@ public class ProductoRepository {
         return productoCrudRepository.findByCantidadStockLessThan(cantidad, true);
     }
 
-    public Optional<Producto> getProducto(int idProducto ) {
+    public Optional<Producto> getProducto(int idProducto) {
         return productoCrudRepository.findById(idProducto);
     }
 

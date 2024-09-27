@@ -229,7 +229,7 @@ spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
   * PagingAndSortingRepository: lo mismo de crud + paginación y ordenamiento
   * JPARepository: lo mismo de los anteriores + tareas específicas de JPA como Flush -> combina y guarda todo en memoria sin que otros entornos y entidades lo vean
 
-#### Ejemplo implementación CrudRepository<T, ID>
+### Implementación CrudRepository<T, ID> mediante Interfaz
 ```java
 public interface ProductoCrudRepository extends CrudRepository<Producto, Integer> {
 }
@@ -237,6 +237,19 @@ public interface ProductoCrudRepository extends CrudRepository<Producto, Integer
 > * se crea una interface que extienda de CrudRepository<T, ID>
 > * **CrudResository<T, ID>** espera dos argumentos: La entidad que va a manipular y el tipo de dato de su PK
 > * ProductoCrudRepository ya tiene todos los métodos heredados como **.findAll()**
+
+
+## Inyección de dependencias
+```java
+@Repository
+public class ProductoRepository {
+    //    inyección de dependencia ⬇
+    private ProductoCrudRepository productoCrudRepository;
+}
+```
+> si ProdcutCrudRepository se creo como una interfaz ¿Por que nunca se llego a implementar, sino que se trato como una clase? <br> 
+> **Respuesta.**<br>
+> Inyectamos ProductCrudRepository en el Repository **ProductoRepository** y lo usamos directamente porque extiende de CrudRepository, que es una funcionalidad que nos brinda Spring Data para interactuar con la base de datos sin necesidad de implementar. ¡Únicamente tenemos que utilizarla! Genial, no?
 
 ## Query Methods
 * Consultas sin sql para datos que no puede consultar Repository
