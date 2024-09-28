@@ -318,15 +318,16 @@ public class ProductoRepository {
 ## Patrón Data Mapper
 
 ### Orientar la aplicación en términos de dominio
+
 * **dominio:** Conjunto de entidades y reglas
-  * llevan a cuestas la lógica del negocio
+    * llevan a cuestas la lógica del negocio
 * Separar la lógica del negocio de la capa de persistencia y acceso de datos
-  * La capa de lógica no necesita conocer los detalles de la DB (tablas, campos, etc)
-  * Abstrae la DB
+    * La capa de lógica no necesita conocer los detalles de la DB (tablas, campos, etc)
+    * Abstrae la DB
 * Poporciona un nivel adicional de Abstracción
 * Consite en convertir/traducir dos objetos que pueden hacer una misma labor
-  * Establece símiles 
-  * Traducir propiedades
+    * Establece símiles
+    * Traducir propiedades
 * El proyecto está enfocado en el dominio
 * Desacopla la aplicación de la capa de persistencia
 * Se pueden ocultar campos de forma intencional
@@ -341,6 +342,7 @@ public class ProductoRepository {
 * Evita mezclar idiomas en el dominio
 
 ### mapstruct
+
 [mapstruct.org](https://mapstruct.org/)
 
 * Generador de código para mapeos
@@ -360,6 +362,7 @@ dependencies {
 * instalar **MapStruct Support** en el ide
 
 ### Pasos implementación DataMapper
+
 * Crear clases Mapper *Product* y *Category* en el folder *domain*
 * **Pro tip:** guiarse de los entities para crear los atributos
     * No se llaman exactamente igual los atributos, en este ejemplo están en inglés
@@ -367,4 +370,9 @@ dependencies {
     * generar getters & setters
 
 * Crear la interface ProductRepository en /domain/repository/
-  * 'Traducir' los métodos de ProductoRepository en esa interfaz 
+    * 'Traducir' los métodos de ProductoRepository en esa interfaz
+
+### Mappers
+
+#### Crear package /persistence/mapper/
+
