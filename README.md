@@ -398,3 +398,12 @@ y convertir los objetos existentes usando los mappers del paso3.
 @Repository
 public class ProductoRepository implements ProductRepository {}
 ```
+
+## Inyección de dependencias (DI)
+* **DI** Consiste en pasar la dependencia a la clase que la va a utilizar en lugar de crearla internamente en esa clase
+* para no acoplar la clase a la implementación
+* `@Autowired` para hacer la inyección de dependencias sin crear objetos manualmente, este tag le cede el control a Spring para crear dependencias
+  * **ADVERTENCIA:** este tag sólo sirve con componentes de Spring
+### **IoC:** 
+  * **Inversión de Control:** El framework toma control de los objetos
+  * Spring tiene un contendor IoC que administra y crea instancias de objetos 
