@@ -363,16 +363,38 @@ dependencies {
 
 ### Pasos implementación DataMapper
 
-* Crear clases Mapper *Product* y *Category* en el folder *domain*
+* 1. Crear clases **DOMINIO** *Product* y *Category* en el folder */domain*
 * **Pro tip:** guiarse de los entities para crear los atributos
     * No se llaman exactamente igual los atributos, en este ejemplo están en inglés
     * Usan tipos primitivos
     * generar getters & setters
 
-* Crear la interface ProductRepository en /domain/repository/
+* 2. Crear la **INTERFAZ - CONTRATO** ProductRepository en /domain/repository/
     * 'Traducir' los métodos de ProductoRepository en esa interfaz
 
-### Mappers
+### 3. Definir Mappers
 
 #### Crear package /persistence/mapper/
+* Crear las interfaces **CategoryMapper** & **ProductMapper**
+* Usar los tags de mapstruct para mapear los atributos entre las entidades del dominio **/domain/Category, Product** y la persistencia **/persistence/entity/Categoria, Producto**
+  * `@Mapper`
+  * `@Mappings`
+  * `@Mapping`
+  * `@InheritInverseConfiguration`
+* Definir métodos en esas interfaces con nombres descriptivos de la conversión, ej:
+```java
+    @Mappings({
+            @Mapping(source = "idCategoria", target = "idCategory"),
+            @Mapping(source = "descripcion", target = "category"),
+            @Mapping(source = "estado", target = "active")
+    })
+    Category toCategory(Categoria categoria);
+```
 
+### 4. Implementar INTERFAZ - CONTRATO del paso 2
+Implementar métodos de la *INTERFAZ - CONTRATO* /domain/repository/ProductRepository en /persistence/ProductoRepository 
+y convertir los objetos existentes usando los mappers del paso3.
+```java
+@Repository
+public class ProductoRepository implements ProductRepository {}
+```
