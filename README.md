@@ -363,56 +363,93 @@ dependencies {
 
 ### Pasos implementación DataMapper
 
-* 1. Crear clases **DOMINIO** *Product* y *Category* en el folder */domain*
+*
+    1. Crear clases **DOMINIO** *Product* y *Category* en el folder */domain*
 * **Pro tip:** guiarse de los entities para crear los atributos
     * No se llaman exactamente igual los atributos, en este ejemplo están en inglés
     * Usan tipos primitivos
     * generar getters & setters
 
-* 2. Crear la **INTERFAZ - CONTRATO** ProductRepository en /domain/repository/
+*
+    2. Crear la **INTERFAZ - CONTRATO** ProductRepository en /domain/repository/
+
     * 'Traducir' los métodos de ProductoRepository en esa interfaz
 
 ### 3. Definir Mappers
 
 #### Crear package /persistence/mapper/
+
 * Crear las interfaces **CategoryMapper** & **ProductMapper**
-* Usar los tags de mapstruct para mapear los atributos entre las entidades del dominio **/domain/Category, Product** y la persistencia **/persistence/entity/Categoria, Producto**
-  * `@Mapper`
-  * `@Mappings`
-  * `@Mapping`
-  * `@InheritInverseConfiguration`
+* Usar los tags de mapstruct para mapear los atributos entre las entidades del dominio **/domain/Category, Product** y
+  la persistencia **/persistence/entity/Categoria, Producto**
+    * `@Mapper`
+    * `@Mappings`
+    * `@Mapping`
+    * `@InheritInverseConfiguration`
 * Definir métodos en esas interfaces con nombres descriptivos de la conversión, ej:
+
 ```java
-    @Mappings({
-            @Mapping(source = "idCategoria", target = "idCategory"),
-            @Mapping(source = "descripcion", target = "category"),
-            @Mapping(source = "estado", target = "active")
-    })
-    Category toCategory(Categoria categoria);
+
+@Mappings({
+        @Mapping(source = "idCategoria", target = "idCategory"),
+        @Mapping(source = "descripcion", target = "category"),
+        @Mapping(source = "estado", target = "active")
+})
+Category toCategory(Categoria categoria);
 ```
 
 ### 4. Implementar INTERFAZ - CONTRATO del paso 2
-Implementar métodos de la *INTERFAZ - CONTRATO* /domain/repository/ProductRepository en /persistence/ProductoRepository 
+
+Implementar métodos de la *INTERFAZ - CONTRATO* /domain/repository/ProductRepository en /persistence/ProductoRepository
 y convertir los objetos existentes usando los mappers del paso3.
+
 ```java
+
 @Repository
-public class ProductoRepository implements ProductRepository {}
+public class ProductoRepository implements ProductRepository {
+}
 ```
 
 ## Inyección de dependencias (DI)
+
 * **DI** Consiste en pasar la dependencia a la clase que la va a utilizar en lugar de crearla internamente en esa clase
 * para no acoplar la clase a la implementación
-* `@Autowired` para hacer la inyección de dependencias sin crear objetos manualmente, este tag le cede el control a Spring para crear dependencias
-  * **ADVERTENCIA:** este tag sólo sirve con componentes de Spring
-### **IoC:** 
-  * **Inversión de Control:** El framework toma control de los objetos
-  * Spring tiene un contendor IoC que administra y crea instancias de objetos 
+* `@Autowired` para hacer la inyección de dependencias sin crear objetos manualmente, este tag le cede el control a
+  Spring para crear dependencias
+    * **ADVERTENCIA:** este tag sólo sirve con componentes de Spring
+
+### **IoC:**
+
+* **Inversión de Control:** El framework toma control de los objetos
+* Spring tiene un contendor IoC que administra y crea instancias de objetos
 
 ## Servicio
+
 * Es intermediario entre controlador de la API y el repositorio
-* El Servicio tiene lógica de acceso a los datos desde la aplicación, mientras que el Repositorio es la capa de acceso al sitema de almacén de datos
+* El Servicio tiene lógica de acceso a los datos desde la aplicación, mientras que el Repositorio es la capa de acceso
+  al sitema de almacén de datos
 * Analogía cajero/banco:
-  * Servicio es el cajero
-  * Repositorio es el banco
+    * Servicio es el cajero
+    * Repositorio es el banco
 * Crear clase **ProductService** en domain/service
 * usar tag `@Service` y `@Autowired` para implementar la interfaz en domain/repository
+
+## @RestController
+
+* Usa anotaciones `@RestController` & `@RequestMapping("/products")`
+* creo la clase **ProductController** en la ruta /web.controller/
+* Implemento metodos definidos en el servicio /domain/service/ProductService
+
+### Issue
+
+> Por si a algun@ le aparece el error de que no reconoce el atributo categoria en la clase Producto es porque me faltaba
+> agregar los Getter y Setter de ese atributo. Lo mismo me pasó que me decía que no reconocía el atributo productos en
+> la
+> clase Categoria y me salia el siguiente error:
+
+> error: Unknown property "productos" in result type Categoria. Did you mean "estado"?
+
+> Es tambien porque en la clase Categoria me hacía falta implementar los Getter y Setter del atributo productos.
+
+> Luego de agregar estos Getter y Setter el codigo me funcionó correctamente. Lo comento por si a alguien le pasa lo
+> mismo.
