@@ -407,3 +407,12 @@ public class ProductoRepository implements ProductRepository {}
 ### **IoC:** 
   * **Inversión de Control:** El framework toma control de los objetos
   * Spring tiene un contendor IoC que administra y crea instancias de objetos 
+
+## Servicio
+* Es intermediario entre controlador de la API y el repositorio
+* El Servicio tiene lógica de acceso a los datos desde la aplicación, mientras que el Repositorio es la capa de acceso al sitema de almacén de datos
+* Analogía cajero/banco:
+  * Servicio es el cajero
+  * Repositorio es el banco
+* Crear clase **ProductService** en domain/service
+* usar tag `@Service` y `@Autowired` para implementar la interfaz en domain/repository
