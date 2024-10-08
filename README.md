@@ -453,3 +453,14 @@ public class ProductoRepository implements ProductRepository {
 
 > Luego de agregar estos Getter y Setter el codigo me funcionó correctamente. Lo comento por si a alguien le pasa lo
 > mismo.
+
+## ResponseEntity
+
+* Sirve para controlar llamados y respuestas que reciben los controladores
+* HttpStatus para definir que código retornar (HttpStatus.OK, HttpStatus.NOT_FOUND)
+* Se refactorizó los métodos del Controller para que retornen ResponseEntity
+* Desde la versión 5 de Spring existe el siguiente método static en ResponseEntity:
+```java
+    ResponseEntity.of(productService.getProduct(productId))
+```
+> El método of hace lo mismo que .getProduct().map().orElse()
