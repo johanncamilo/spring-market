@@ -467,9 +467,13 @@ public class ProductoRepository implements ProductRepository {
 
 > El método of hace lo mismo que .getProduct().map().orElse()
 
-## Dominio compras
+## Crear Dominio compras
 
 1. se crean las clases del dominio: Puchase y PurchaseItem en /domain
 2. se crean sus atributos símiles de las clases de la persistencia: Compra y ComprasProducto de /persistence/entity
 3. se crea la interface PurchaseRepository en domain/repository para especificar la implementación que quiero definir
 4. se definen los métodos de esa interface haciendo uso del Optional para **getByClient**
+
+## Mapear el dominio de compras
+
+1. Se crean los mappers en persitence/mapper
