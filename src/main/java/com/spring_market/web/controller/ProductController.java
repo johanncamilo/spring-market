@@ -29,9 +29,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable("id") int productId) {
-        return productService.getProduct(productId)
-                .map(product -> new ResponseEntity<>(product, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        return productService.getProduct(productId).map(product -> new ResponseEntity<>(product, HttpStatus.OK)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/alt/{id}")
@@ -41,15 +39,8 @@ public class ProductController {
 
     @GetMapping("/category/{id}")
     public ResponseEntity<List<Product>> getByCategory(@PathVariable("id") int categoryId) {
-        return productService.getByCategory(categoryId)
-                .map(products -> new ResponseEntity<>(products, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-    @GetMapping("/category/alt/{id}")
-    public ResponseEntity<List<Product>> getByCategoryAlt(@PathVariable("id") int categoryId) {
-        return productService.getByCategory(categoryId)
-                .map(products -> new ResponseEntity<>(products, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+//        Solución bug cuando no hay items de una categoría
+        return productService.getByCategory(categoryId).map(products -> !products.isEmpty() ? new ResponseEntity<>(products, HttpStatus.OK) : new ResponseEntity<>(products, HttpStatus.NO_CONTENT)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/save")

@@ -460,7 +460,16 @@ public class ProductoRepository implements ProductRepository {
 * HttpStatus para definir que código retornar (HttpStatus.OK, HttpStatus.NOT_FOUND)
 * Se refactorizó los métodos del Controller para que retornen ResponseEntity
 * Desde la versión 5 de Spring existe el siguiente método static en ResponseEntity:
+
 ```java
     ResponseEntity.of(productService.getProduct(productId))
 ```
+
 > El método of hace lo mismo que .getProduct().map().orElse()
+
+## Dominio compras
+
+1. se crean las clases del dominio: Puchase y PurchaseItem en /domain
+2. se crean sus atributos símiles de las clases de la persistencia: Compra y ComprasProducto de /persistence/entity
+3. se crea la interface PurchaseRepository en domain/repository para especificar la implementación que quiero definir
+4. se definen los métodos de esa interface haciendo uso del Optional para **getByClient**
