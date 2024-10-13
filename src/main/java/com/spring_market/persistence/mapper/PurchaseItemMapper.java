@@ -7,8 +7,11 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-//se está usando el ProductMapper.class para ignorar el target producto
-@Mapper(componentModel = "spring", uses = {ProductMapper.class})
+/**
+ * se está usando el ProductMapper.class para ignorar el target producto
+ * upd: ya no es necesario usarlo, se le fue la chaveta al profe XD
+ */
+@Mapper(componentModel = "spring")
 public interface PurchaseItemMapper {
 
     @Mappings({

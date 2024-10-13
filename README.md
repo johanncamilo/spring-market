@@ -477,3 +477,47 @@ public class ProductoRepository implements ProductRepository {
 ## Mapear el dominio de compras
 
 1. Se crean los mappers en persitence/mapper
+
+### Corrección en PurchaseItemMapper
+
+En ese sentido el PurchaseItemMapper no lleva ningún Mapper en uses. No pasa nada si lo ponemos pero no lo va a
+necesitar.
+
+Quedaría así:
+
+```java
+
+@Mapper(componentModel = "spring")
+public interface PurchaseItemMapper {
+
+}
+```
+
+## Nota importante
+
+Generar getters & setters de los atributos cliente y productos de la clase Compra, y compra y producto de la clase
+Compras Producto
+
+## CREAR REPOSITORIO COMPRA
+
+1. Crear Clase CompraRepository en /persistence/
+2. hacer que implemente /domain/repository/PurchaseRepository/
+3. implementar métodos y ponerle tag ´@Repository´
+4. Crear el respositorio que se va a comunicar con base d datos con una Interface que extienda de CrudRepository, en
+   este caso se crea la Interface CompraCrudRepository en /persistence/crud/
+
+  ```java
+  public interface CompraCrudRepository extends CrudRepository<Compra, Integer> {
+}
+  ```
+
+> se le pasa el entity Compra y su PK en el op diamante
+
+5. Se debe modificar el entity compra para que guarde en cascada
+
+```java
+
+@OneToMany(mappedBy = "compra", cascade = {CascadeType.ALL})
+private List<ComprasProducto> productos;
+```
+
