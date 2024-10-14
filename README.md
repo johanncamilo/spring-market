@@ -521,3 +521,36 @@ Compras Producto
 private List<ComprasProducto> productos;
 ```
 
+## DOCUMENTAR CON SWAGGER
+[Página oficial springdoc-openapi v2.6.0](https://springdoc.org/)
+[Repositorio Maven](https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui/2.6.0)
+
+### Añadir dependencias y Dar click en el elefantico
+
+#### bluild.gradle / dependencies{}
+```gradle
+implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+```
+
+#### application.properties
+```gradle
+# swagger-ui custom path
+springdoc.swagger-ui.path=/swagger-ui.html
+```
+
+### Documentar en los controladores
+```java
+@GetMapping("/{id}")
+@Operation(summary = "Search a product by ID")
+@ApiResponses({
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "404", description = "Product not found"),
+})
+public ResponseEntity<Product> getProduct(@Parameter(description = "the product id", required = true, example = "7") @PathVariable("id") int productId) {
+    return productService.getProduct(productId).map(product -> new ResponseEntity<>(product, HttpStatus.OK)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+}
+```
+### Ejecutar e ir a la siguiente url
+```gradle
+http://localhost:8888/belos-market/api/swagger-ui/index.html#/
+```
